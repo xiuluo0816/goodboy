@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.novel.basic.cms.model.Permission">
+
+    <!-- 插入资源-->
+    <insert id="createPermission" parameterType="com.novel.basic.cms.model.Permission">
+        INSERT INTO
+                sys_permissions
+                (
+                permission,
+                description,
+                available
+                )
+        VALUES
+                (
+                #{permission},
+                #{description},
+                #{available}
+                )
+    </insert>
+    
+    <!-- 首先把与permission关联的相关表的数据删掉 -->
+	<delete id="deleteRolePermission">
+		DELETE FROM sys_roles_permissions  
+		WHERE  permission_id = #{permissionId}
+	</delete>
+    
+    <!-- 删除权限资源 -->
+	<delete id="deletePermission">
+		DELETE FROM sys_permissions  
+		WHERE  id = #{permissionId}
+	</delete>
+
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.novel.basic.cms.model.Category">
+
+    <!-- 插入日程-->
+    <insert id="insertCalendarEvent" parameterType="com.novel.basic.cms.model.Category">
+        INSERT INTO
+                base_calendar_event
+                (
+                id,
+                title,
+                backgroundcolor
+                )
+        VALUES
+                (
+                #{id},
+                #{title},
+                #{backgroundcolor}
+                )
+    </insert>
+
+    <!-- 查询日程List -->
+    <select id="findAllCalendars" resultType="com.novel.basic.cms.model.Category">
+        SELECT
+                 id,
+                 title,
+                 backgroundcolor
+        FROM
+                base_calendar_event
+    </select>
+
+    <!-- 分配日程-->
+    <insert id="insertToSubEvent" parameterType="com.novel.basic.cms.model.Category">
+        INSERT INTO
+        sub_calendar_event
+        (
+        id,
+        startTime,
+        endTime,
+        allDay,
+        par_id,
+        url
+        )
+        VALUES
+        (
+        #{id},
+        #{startTime},
+        #{startTime},
+        #{allDay},
+        #{parId},
+        #{url}
+        )
+    </insert>
+
+    <!-- 查询日程List -->
+    <select id="getAllSubCalendars" resultType="com.novel.basic.cms.model.Category">
+        SELECT
+            sce.id,
+            bce.title,
+            bce.backgroundcolor,
+            sce.startTime,
+            sce.endTime,
+            sce.allDay,
+            sce.url
+        FROM
+            base_calendar_event bce,
+            sub_calendar_event sce
+        WHERE
+            bce.id = sce.par_id
+    </select>
+
+</mapper>

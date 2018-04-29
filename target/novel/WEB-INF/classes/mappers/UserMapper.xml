@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.novel.basic.cms.model.User">
+
+    <!-- 插入用户-->
+    <insert id="createUser" parameterType="com.novel.basic.cms.model.User">
+        INSERT INTO
+                sys_users
+                (
+                username,
+                password,
+                salt,
+                locked
+                )
+        VALUES
+                (
+                #{username},
+                #{password},
+                #{salt},
+                #{locked},
+                )
+    </insert>
+    
+	<!-- 编辑 -->
+	<update id="updateUser">
+		UPDATE sys_users
+		SET    	username = #{username},
+				password = #{password},
+				salt = #{salt},
+				locked = #{locked}
+		WHERE id = #{id} 
+	</update>
+    
+    <!-- 删除用户-->
+	<delete id="deleteUser">
+		DELETE FROM sys_users  
+		WHERE  id = #{userId}
+	</delete>
+	
+	<!-- 插入用户角色-->
+    <insert id=" createUserRoles" parameterType="com.novel.basic.cms.model.UserRole">
+        INSERT INTO
+                sys_users_roles
+                (
+                user_id,
+                role_id
+                )
+        VALUES
+                (
+                #{userId},
+                #{roleId}
+                )
+    </insert>
+    
+    <!-- 删除用户角色 -->
+	<delete id="deleteUserRoles">
+		DELETE FROM sys_users_roles  
+		WHERE  user_id = #{userId}
+		AND role_id = #{roleId}
+	</delete>
+	
+	<!-- 用户角色是否存在-->
+    <select id="existsUserRoles" resultType="com.novel.basic.cms.model.UserRole">
+        SELECT
+				user_id userId,
+				role_id roleId
+        FROM
+                sys_users_roles
+		WHERE user_id = #{userId}
+		AND   role_id = #{roleId}
+    </select>
+    
+    <!-- 查找一个用户[根据ID]-->
+    <select id="findOneUserById" resultType="com.novel.basic.cms.model.User">
+        SELECT
+				id,
+				username,
+				password,
+				organization_code as organizationCode,
+				organization_name as organizationName,
+				salt,
+				locked
+        FROM
+                sys_users
+		WHERE id = #{userId}
+    </select>
+    
+    <!-- 查找一个用户[根据用户名]-->
+    <select id="findOneUserByName" resultType="com.novel.basic.cms.model.User">
+        SELECT
+				id,
+				username,
+				password,
+				organization_code as organizationCode,
+				organization_name as organizationName,
+				salt,
+				locked
+        FROM
+                sys_users
+		WHERE username = #{username}
+    </select>
+    
+    <!-- 查找一个角色List-->
+    <select id="findRoles" resultType="com.novel.basic.cms.model.Role">
+        SELECT
+				role
+        FROM
+                sys_users u,
+                sys_roles r,
+                sys_users_roles ur
+		WHERE  u.username = #{username}
+		AND    u.id=ur.user_id
+		AND    r.id=ur.role_id
+    </select>
+    
+    <!-- 查找一个资源List-->
+    <select id="findPermissions" resultType="com.novel.basic.cms.model.Permission">
+        SELECT
+				permission
+        FROM
+                sys_users u,
+                sys_roles r,
+                sys_permissions p,
+                sys_users_roles ur,
+                sys_roles_permissions rp
+		WHERE  u.username = #{username}
+		AND    u.id=ur.user_id
+		AND    r.id=ur.role_id
+		AND    p.id=rp.permission_id
+		AND    r.id=rp.role_id
+    </select>
+
+</mapper>

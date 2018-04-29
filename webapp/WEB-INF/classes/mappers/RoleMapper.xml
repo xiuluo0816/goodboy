@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.novel.basic.cms.model.Role">
+
+    <!-- 插入角色-->
+    <insert id="createRole" parameterType="com.novel.basic.cms.model.Role">
+        INSERT INTO
+                sys_roles
+                (
+                role,
+                description,
+                available
+                )
+        VALUES
+                (
+                #{role},
+                #{description},
+                #{available}
+                )
+    </insert>
+    
+    <!-- 插入角色资源-->
+    <insert id="createRolePermission" parameterType="com.novel.basic.cms.model.RolePermssion">
+        INSERT INTO
+                sys_roles_permissions
+                (
+                role_id,
+                permission_id
+                )
+        VALUES
+                (
+                #{roleId},
+                #{permission_id}
+                )
+    </insert>
+    
+    <!-- 删除用户角色  -->
+	<delete id="deleteUserRoles">
+		DELETE FROM sys_users_roles  
+		WHERE  role_id = #{roleId}
+	</delete>
+    
+    <!-- 删除角色 -->
+	<delete id="deleteRole">
+		DELETE FROM sys_roles  
+		WHERE id = #{roleId}
+	</delete>
+	
+	<!-- 删除角色资源 -->
+	<delete id="deleteRolePermission">
+		DELETE FROM sys_roles_permissions  
+		WHERE role_id = #{roleId}
+		AND permission_id = #{permissionId}
+	</delete>
+	
+	<!-- 角色资源是否存在-->
+    <select id="existsRolePermission" resultType="com.novel.basic.cms.model.RolePermssion">
+        SELECT
+				roleId,
+				permissionId
+        FROM
+                sys_roles_permissions
+        WHERE 
+        		WHERE role_id = #{roleId}
+		AND 	permission_id = #{permissionId}
+    </select>
+	
+</mapper>
